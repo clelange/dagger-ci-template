@@ -35,20 +35,11 @@ class DaggerCiTemplate:
         This example uses a build context directory in a different location
         than the current working directory.
         """
-        # get build context with dockerfile added
-        # workspace = (
-        #     dag.container()
-        #     .with_directory("/src", contextdir)
-        #     .with_workdir("/src")
-        #     .with_file("/src/Dockerfile", dockerfile)
-        #     .directory("/src")
-        # )
-
         # build using Dockerfile and publish to registry
         ref = (
             dag.container()
             .build(context=context, dockerfile=dockerfile)
-            .publish(f"{self.ci_registry_image}:{self.ci_commit_short_sha}")
+            .publish(self.registry_image_path)
         )
         # if publish:
         #     ref = ref.publish("ttl.sh/hello-dagger")
