@@ -8,10 +8,6 @@ from dagger import DefaultPath, Doc, dag, function, object_type
 @object_type
 class DaggerCiTemplate:
 
-    def __init__(self):
-        self._dag = dag
-        self.registry_image_path = os.getenv("REGISTRY_IMAGE_PATH", "ttl.sh/dagger-ci-template")
-
     @function
     async def build(
         self,
@@ -24,6 +20,10 @@ class DaggerCiTemplate:
             str,
             Doc("location of Dockerfile"),
         ] = "Dockerfile",
+        registry_image_path: Annotated[
+            str,
+            Doc("registry image path"),
+        ] = "ttl.sh/dagger-ci-template",
         publish: Annotated[
             bool,
             Doc("publish to registry"),
@@ -39,7 +39,7 @@ class DaggerCiTemplate:
         ref = (
             dag.container()
             .build(context=context, dockerfile=dockerfile)
-            .publish(self.registry_image_path)
+            .publish(registry_image_path)
         )
         # if publish:
         #     ref = ref.publish("ttl.sh/hello-dagger")
